@@ -6,6 +6,73 @@
 #define square(x)  (x) * (x)
 #define paste(front, back) front ## back
 
+char buf[MAXLINE]; //用于存放ungetch()的缓冲区
+int bufp = 0;
+
+int getch() {
+	return bufp > 0 ? buf[--bufp] : getchar();
+} 
+
+void ungetch(int c) {
+	if (bufp > MAXLINE) {
+		printf("error: too many characters\n");
+	}
+	else {
+		buf[bufp++] = c;
+	}
+}
+
+int getint(int *pn) {
+	int c, sign;
+	while (isspace((c = getch()))) {
+		;
+	}
+	if (!isdigit(c) && c != '-' && c != '+' && c != EOF) {
+		ungetch(c);
+		return 0;
+	}
+	sign = (c == '-' ? -1 : 1);
+	if (c == '-' || c == '+') {
+		c = getch();
+	}
+	for (*pn = 0; isdigit(c); c = getch()) {
+		*pn = 10 * (*pn) + (c - '0');
+	}
+	*pn *= sign;
+	if (c != EOF) {
+		ungetch(c);
+	}
+	return c;
+}
+
+double getdouble(double *p) {
+	double sign;
+	double c;
+	double base = 1.0;
+	while (isspace(c = getch())) {
+		;
+	}
+	if (!isdigit(c) && c != '-' && c != '+' && c != EOF) {
+		ungetch(c);
+		return 0.0;
+	}
+	sign = (c == '-' ? -1.0 : 1.0);
+	for (*p = 0; isdigit(c); c = getch()) {
+		*p = 10.0 * *p + (c - '0');
+	}
+	if (c == '.' && c != EOF) {
+		c = getch();
+	}
+	while (isdigit(c)) {
+		*p = 10.0 * *p + (c - '0');
+		base *= 10.0;
+		c = getch();
+	}
+	*p = *p / base * sign;
+
+	return c;
+}
+
 int strrindex(char s[], char t[]) {
 	int i, j, k;
 	for (i = 0; s[i] != '\0'; i++) {
@@ -92,4 +159,10 @@ void itoa(int n, char str[], int index) {
 		itoa(n / 10, str, index-1);
 	}
 	str[index] = (n % 10 + '0');
+}
+
+void swapNum(int *x, int *y) {
+	int temp = *x;
+	*x = *y;
+	*y = temp;
 }

@@ -5,8 +5,8 @@
 #define max(a, b) (a > b ? a : b)
 
 int main() {
-	int name1 = 2;
-	int m = 3;
-	printf("%d\n", paste(name, 1));
+	double c = 0;
+	getdouble(&c);
+	printf("%f\n", c);
 	return 0;
 }
